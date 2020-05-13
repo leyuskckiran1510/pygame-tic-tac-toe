@@ -34,7 +34,7 @@ checker=''
 pygame.mixer.init()
 #pygame.mixer.Channel(2)
 pygame.mixer.Channel(0).set_volume(40)
-pygame.mixer.Channel(0).play(pygame.mixer.Sound('lol1.wav'))
+pygame.mixer.Channel(0).play(pygame.mixer.Sound('./lol1.wav'))
 pygame.mixer.music.load('invalid.mp3')
 #music1.play(loops=1,start=0)
 def turn_publisher():
@@ -128,13 +128,13 @@ def mtch_fixer():
                pygame.display.flip()
                #print("..winnner......xxxxxxx")
                pygame.mixer.Channel(5).set_volume(70)
-               pygame.mixer.Channel(5).play(pygame.mixer.Sound('win.wav'))
+               pygame.mixer.Channel(5).play(pygame.mixer.Sound('./win.wav'))
             time.sleep(4)
             run=False
             return
          else:
             pygame.mixer.Channel(1).set_volume(70)
-            pygame.mixer.Channel(1).play(pygame.mixer.Sound('hacker.wav'))
+            pygame.mixer.Channel(1).play(pygame.mixer.Sound('./hacker.wav'))
             pygame.mixer.Channel(1).fadeout(500)
 
 
@@ -145,7 +145,7 @@ def mtch_fixer():
       screen.blit(text,(60,400))
       #print("checking..")'''
       pygame.mixer.Channel(1).set_volume(70)
-      pygame.mixer.Channel(1).play(pygame.mixer.Sound('hacker.wav'))
+      pygame.mixer.Channel(1).play(pygame.mixer.Sound('./hacker.wav'))
       pygame.mixer.Channel(1).fadeout(500)
 
 
@@ -166,13 +166,13 @@ def mtch_fixer():
                screen.blit(text,(60,400))
                pygame.display.flip()
                pygame.mixer.Channel(5).set_volume(70)
-               pygame.mixer.Channel(5).play(pygame.mixer.Sound('win.wav'))
+               pygame.mixer.Channel(5).play(pygame.mixer.Sound('./win.wav'))
             time.sleep(4)
             run=False
             return
          else:
             pygame.mixer.Channel(1).set_volume(70)
-            pygame.mixer.Channel(1).play(pygame.mixer.Sound('hacker.wav'))
+            pygame.mixer.Channel(1).play(pygame.mixer.Sound('./hacker.wav'))
             pygame.mixer.Channel(1).fadeout(500)
 
    except IndexError:
@@ -182,7 +182,7 @@ def mtch_fixer():
       pygame.display.flip()'''
       #print("checking...")
       pygame.mixer.Channel(1).set_volume(70)
-      pygame.mixer.Channel(1).play(pygame.mixer.Sound('hacker.wav'))
+      pygame.mixer.Channel(1).play(pygame.mixer.Sound('./hacker.wav'))
       pygame.mixer.Channel(1).fadeout(500)
 lolll=False
 countu=0
