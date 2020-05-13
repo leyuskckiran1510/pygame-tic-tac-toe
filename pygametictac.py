@@ -3,10 +3,11 @@ import itertools
 import time
 import random
 import os
-cwd=os.getcwd()
-for ty in range(1,100):
-   print(cwd)
-
+#cwd=os.getcwd()
+#for ty in range(1,100):
+#   print(cwd)
+path = os.path.abspath('pygametictac.py')
+directory = os.path.dirname(path)
 
 pygame.init()
 pygame.font.init()
@@ -37,9 +38,12 @@ checker=''
 #def new_game():
 pygame.mixer.init()
 #pygame.mixer.Channel(2)
-pygame.mixer.Channel(0).set_volume(40)
-pygame.mixer.Channel(0).play(pygame.mixer.Sound('./lol1.wav'))
-pygame.mixer.music.load('invalid.mp3')
+try:
+    pygame.mixer.Channel(0).set_volume(40)
+    pygame.mixer.Channel(0).play(pygame.mixer.Sound(directory+'./lol1.wav'))
+    pygame.mixer.music.load('invalid.mp3')
+except FileNotFoundError:
+   print("")
 #music1.play(loops=1,start=0)
 def turn_publisher():
    pygame.display.update()
@@ -131,15 +135,21 @@ def mtch_fixer():
                screen.blit(text,(60,400))
                pygame.display.flip()
                #print("..winnner......xxxxxxx")
-               pygame.mixer.Channel(5).set_volume(70)
-               pygame.mixer.Channel(5).play(pygame.mixer.Sound('./win.wav'))
+               try:
+                   pygame.mixer.Channel(5).set_volume(70)
+                   pygame.mixer.Channel(5).play(pygame.mixer.Sound(directory+'./win.wav'))
+               except FileNotFoundError:
+                   print("")    
             time.sleep(4)
             run=False
             return
          else:
-            pygame.mixer.Channel(1).set_volume(70)
-            pygame.mixer.Channel(1).play(pygame.mixer.Sound('./hacker.wav'))
-            pygame.mixer.Channel(1).fadeout(500)
+             try:
+                pygame.mixer.Channel(1).set_volume(70)
+                pygame.mixer.Channel(1).play(pygame.mixer.Sound(directory+'./hacker.wav'))
+                pygame.mixer.Channel(1).fadeout(500)
+             except FileNotFoundError:
+                print("")
 
 
       lisv2=""
@@ -148,9 +158,12 @@ def mtch_fixer():
       text =pygame.font.SysFont('Comic Sans MS',30).render("CHECKING.......", False,[0,0,255])
       screen.blit(text,(60,400))
       #print("checking..")'''
-      pygame.mixer.Channel(1).set_volume(70)
-      pygame.mixer.Channel(1).play(pygame.mixer.Sound('./hacker.wav'))
-      pygame.mixer.Channel(1).fadeout(500)
+      try:
+          pygame.mixer.Channel(1).set_volume(70)
+          pygame.mixer.Channel(1).play(pygame.mixer.Sound(directory+'./hacker.wav'))
+          pygame.mixer.Channel(1).fadeout(500)
+      except FileNotFoundError:
+       print("")
 
 
    try:
@@ -161,7 +174,7 @@ def mtch_fixer():
          poll=list(lisv)
          poll.sort()
          lisv=tuple(poll)
-         print("o's",lisv)
+        # print("o's",lisv)
          if lisv==(1,2,3) or lisv==(4,5,6) or lisv==(7,8,9)or lisv==(1,4,7)or lisv==(2,5,8)or lisv==(3,6,9)or lisv==(1,5,9)or lisv==(3,5,7):
             #print("..winnner......ooooooo")
             for j2 in range(10,50):
@@ -169,15 +182,21 @@ def mtch_fixer():
                text =pygame.font.SysFont('Comic Sans MS',j2).render("WINNER IS O", False,[j2*3,j2*5,j2*4])
                screen.blit(text,(60,400))
                pygame.display.flip()
-               pygame.mixer.Channel(5).set_volume(70)
-               pygame.mixer.Channel(5).play(pygame.mixer.Sound('./win.wav'))
+               try:
+                   pygame.mixer.Channel(5).set_volume(70)
+                   pygame.mixer.Channel(5).play(pygame.mixer.Sound(directory+'./win.wav'))
+               except FileNotFoundError:
+                     print("")
             time.sleep(4)
             run=False
             return
          else:
-            pygame.mixer.Channel(1).set_volume(70)
-            pygame.mixer.Channel(1).play(pygame.mixer.Sound('./hacker.wav'))
-            pygame.mixer.Channel(1).fadeout(500)
+             try:
+                pygame.mixer.Channel(1).set_volume(70)
+                pygame.mixer.Channel(1).play(pygame.mixer.Sound(directory+'./hacker.wav'))
+                pygame.mixer.Channel(1).fadeout(500)
+             except FileNotFoundError:
+               print("")
 
    except IndexError:
       '''game2.line(screen,f_c,[60,400],[700,400],100)
@@ -185,9 +204,14 @@ def mtch_fixer():
       screen.blit(text,(60,400))
       pygame.display.flip()'''
       #print("checking...")
-      pygame.mixer.Channel(1).set_volume(70)
-      pygame.mixer.Channel(1).play(pygame.mixer.Sound('./hacker.wav'))
-      pygame.mixer.Channel(1).fadeout(500)
+      try:
+          pygame.mixer.Channel(1).set_volume(70)
+          pygame.mixer.Channel(1).play(pygame.mixer.Sound(directory+'./hacker.wav'))
+
+          pygame.mixer.Channel(1).fadeout(500)
+      except FileNotFoundError:
+         print("")
+
 lolll=False
 countu=0
 while lolll==True:
@@ -200,7 +224,7 @@ while lolll==True:
        for ev in pygame.event.get():
          if ev.type ==pygame.MOUSEBUTTONDOWN:  
            lolll=False
-   print(alll,countu)
+   #print(alll,countu)
    alll=0
    pygame.display.flip()
    textsurface = myfont.render("NEW GAME", False,[255,0,12])
