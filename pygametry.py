@@ -2,6 +2,10 @@ import pygame
 import itertools
 import time
 import random
+import os
+cwd=os.getcwd()
+for ty in range(1,100):
+   print(cwd)
 
 
 pygame.init()
