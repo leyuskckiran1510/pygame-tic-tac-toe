@@ -1,262 +1,204 @@
-import pygame
-import itertools
 import time
-import random
-import os
-#cwd=os.getcwd()
-#for ty in range(1,100):
-#   print(cwd)
-path = os.path.abspath('pygametictac.py')
-directory = os.path.dirname(path)
+import pygame
+from helpers import (
+    itr_add,
+)  # type:ignore
+from pygame import (
+    draw as pgDraw,
+    mouse as pgMouse,
+)
+from utils import (  # type:ignore
+    Colors,
+    PlayAudio,
+    Window,
+    BoundingBox,
+    State,
+)
 
-pygame.init()
-pygame.font.init()
-pygame.display.set_caption("tik tak toe.BY LEYUSKC")
-myfont = pygame.font.SysFont('Comic Sans MS', 30)
-screen=pygame.display.set_mode([800,500])
-game2=pygame.draw
-game=pygame.mouse
-pos_x=180
-pos_y=140
-pos_y=140
-t_c=(0,0,0)
-f_c=[255,255,255]
-screen.fill(f_c)
-global box_no
-p_count=0
-turn=random.randint(1,2)
-box_no=0
-run=True
-place_x=0
-place_y=0
-plyr_x={}
-plyr_x=set(plyr_x)
-plyr_o={}
-plyr_o=set(plyr_o)
-lisv=""
-checker=''
-#def new_game():
-pygame.mixer.init()
-#pygame.mixer.Channel(2)
-try:
-    pygame.mixer.Channel(0).set_volume(40)
-    pygame.mixer.Channel(0).play(pygame.mixer.Sound(directory+'./lol1.wav'))
-    pygame.mixer.music.load('invalid.mp3')
-except FileNotFoundError:
-   print("")
-#music1.play(loops=1,start=0)
-def turn_publisher():
-   pygame.display.update()
-   if turn==1:
-      game2.line(screen,f_c,[60,20],[700,20],100)
-      textsurface = myfont.render("X's TURN....", False, t_c)
-      screen.blit(textsurface,(60,20))
-      pygame.display.flip()
-   if turn==2:
-      game2.line(screen,f_c,[60,20],[700,20],100)
-      textsurface = myfont.render("O's TURN....", False,t_c)
-      screen.blit(textsurface,(60,20))
-      pygame.display.flip()
-def chart():
-   #game2.rect(screen,[i*2,i*3,i*4],[100+i,100+i,50+i,50+i],i)
-   for i in range(1,3):
-      game2.line(screen,[0,0,0],[pos_x,pos_y+(i*60)],[pos_x+(60*3),pos_y+(i*60)],3)
-      pygame.display.update()
-   for i in range(1,3):
-      game2.line(screen,[0,0,0],[pos_x+(i*60),pos_y],[pos_x+(i*60),pos_y+(60*3)],3)
-      pygame.display.update()
-   #time.sleep(5)
-   pygame.display.flip()
-def plotter():
-   global checker,p_count
-   for val in checker:
-      if int(val)==box_no:
-         p_count-=1
-         print("invalid location choose next location")
-         pygame.mixer.music.set_volume(30)
-         pygame.mixer.music.play(1)
-         pygame.mixer.music.fadeout(1000)
-         return 
-   checker=checker+str(box_no)
-   
-   for i in range(1,10):
-      if box_no==i and turn==1:
-         game2.line(screen,[255,0,255],[place_x,place_y],[place_x+30,place_y+30],5)
-         game2.line(screen,[255,0,255],[place_x+30,place_y],[place_x,place_y+30],5)
-         pygame.display.flip()
-      if box_no==i and turn==2:
-         game2.circle(screen,[255,0,0],[(place_x+10),(place_y+15)],15,5)
-         pygame.display.flip()  
-   mtch_fixer()
-def presschecker():
-   global p_count,turn,run
-   time.sleep(0.05)
-   for ev in pygame.event.get():
-      if ev.type ==pygame.MOUSEBUTTONDOWN:
-         p_count+=1
-         plotter()
-      if p_count==9:
-            run=False
-            print("tie"*10)
-         #print(p_count)
-      if p_count%2==0:
-         #print("player 2")
-         turn=2
-      
-      if p_count%2!=0:
-         # print("player 1")
-         turn=1
-def mtch_fixer():
-   global lisv,plyr_o,plyr_x,run
-   lisv=""
-   plyr_o=set(plyr_o)
-   plyr_x=set(plyr_x)
-   if turn==1:
-    plyr_x.add(box_no)
-   if turn==2:
-    plyr_o.add(box_no)
-    plyr_o=list(plyr_o)
-   plyr_x=list(plyr_x)
-   try:
-      li=list(itertools.combinations(set(plyr_x), 3))
-      
-      for i in range(len(plyr_x)):
-         lisv=li[i]
-         #print(lisv)
-         poll=list(lisv)
-         poll.sort()
-         lisv=tuple(poll)
-         print("x's",lisv)
-         if lisv==(1,2,3) or lisv==(4,5,6) or lisv==(7,8,9)or lisv==(1,4,7)or lisv==(2,5,8)or lisv==(3,6,9)or lisv==(1,5,9)or lisv==(3,5,7):
-            #pygame.display.flip()
-            for jl in range(10,50):
-               game2.line(screen,f_c,[60,400],[700,400],100)
-               text = pygame.font.SysFont('Comic Sans MS',jl).render("WINNER IS X", False,[jl*5,jl*4,jl*3])
-               screen.blit(text,(60,400))
-               pygame.display.flip()
-               #print("..winnner......xxxxxxx")
-               try:
-                   pygame.mixer.Channel(5).set_volume(70)
-                   pygame.mixer.Channel(5).play(pygame.mixer.Sound(directory+'./win.wav'))
-               except FileNotFoundError:
-                   print("")    
-            time.sleep(4)
-            run=False
-            return
-         else:
-             try:
-                pygame.mixer.Channel(1).set_volume(70)
-                pygame.mixer.Channel(1).play(pygame.mixer.Sound(directory+'./hacker.wav'))
-                pygame.mixer.Channel(1).fadeout(500)
-             except FileNotFoundError:
-                print("")
+SPEAKER = PlayAudio()
 
 
-      lisv2=""
-   except IndexError:
-      '''game2.line(screen,f_c,[60,400],[700,400],100)
-      text =pygame.font.SysFont('Comic Sans MS',30).render("CHECKING.......", False,[0,0,255])
-      screen.blit(text,(60,400))
-      #print("checking..")'''
-      try:
-          pygame.mixer.Channel(1).set_volume(70)
-          pygame.mixer.Channel(1).play(pygame.mixer.Sound(directory+'./hacker.wav'))
-          pygame.mixer.Channel(1).fadeout(500)
-      except FileNotFoundError:
-       print("")
+def place_pieces(grid: list[list[str]], window: Window, box: BoundingBox):
+    padding = 10
+    max_area = (box.width) if box.width < box.height else box.height
+    for x_indx, i in enumerate(grid):
+        for y_indx, j in enumerate(i):
+            pos = box.pos_from_index(x_indx, y_indx)
+            if j == "X":
+                pgDraw.line(
+                    window.screen,
+                    [255, 0, 255],
+                    itr_add(pos, [padding]),
+                    itr_add(pos, [box.width - padding, box.height - padding]),
+                    5,
+                )
+                pgDraw.line(
+                    window.screen,
+                    [255, 0, 255],
+                    itr_add(pos, [box.width - padding, padding]),
+                    itr_add(pos, [padding, box.height - padding]),
+                    5,
+                )
+
+            elif j == "O":
+                radius = (max_area - padding) // 2
+                pgDraw.circle(window.screen, [255, 0, 0], itr_add(pos, [box.width // 2, box.height // 2]), radius, 5)
 
 
-   try:
-      lisv=()
-      li2=list(itertools.combinations(set(plyr_o), 3))
-      for i in range(len(plyr_o)):
-         lisv=li2[i]
-         poll=list(lisv)
-         poll.sort()
-         lisv=tuple(poll)
-        # print("o's",lisv)
-         if lisv==(1,2,3) or lisv==(4,5,6) or lisv==(7,8,9)or lisv==(1,4,7)or lisv==(2,5,8)or lisv==(3,6,9)or lisv==(1,5,9)or lisv==(3,5,7):
-            #print("..winnner......ooooooo")
-            for j2 in range(10,50):
-               game2.line(screen,f_c,[60,400],[700,400],100)
-               text =pygame.font.SysFont('Comic Sans MS',j2).render("WINNER IS O", False,[j2*3,j2*5,j2*4])
-               screen.blit(text,(60,400))
-               pygame.display.flip()
-               try:
-                   pygame.mixer.Channel(5).set_volume(70)
-                   pygame.mixer.Channel(5).play(pygame.mixer.Sound(directory+'./win.wav'))
-               except FileNotFoundError:
-                     print("")
-            time.sleep(4)
-            run=False
-            return
-         else:
-             try:
-                pygame.mixer.Channel(1).set_volume(70)
-                pygame.mixer.Channel(1).play(pygame.mixer.Sound(directory+'./hacker.wav'))
-                pygame.mixer.Channel(1).fadeout(500)
-             except FileNotFoundError:
-               print("")
+def chart(grid: list[list[str]], window: Window, cols=3, rows: int = 3) -> BoundingBox:
+    start_pos = int(0), window.header_size
+    end_pos = window.width, window.height
+    width = (end_pos[0] - start_pos[0]) // cols
+    height = (end_pos[1] - start_pos[1]) // rows
 
-   except IndexError:
-      '''game2.line(screen,f_c,[60,400],[700,400],100)
-      text =pygame.font.SysFont('Comic Sans MS',30).render("CHECKING......", False,[0,255,0])
-      screen.blit(text,(60,400))
-      pygame.display.flip()'''
-      #print("checking...")
-      try:
-          pygame.mixer.Channel(1).set_volume(70)
-          pygame.mixer.Channel(1).play(pygame.mixer.Sound(directory+'./hacker.wav'))
+    box = BoundingBox(start_pos, end_pos, width, height)
+    # vertical
+    for i in range(cols):
+        pgDraw.line(
+            window.screen,
+            BLACK,
+            [start_pos[0] + (i * width), start_pos[1]],
+            [start_pos[0] + (i * width), start_pos[1] + (rows * height)],
+            3,
+        )
+    # horizontal
+    for i in range(rows):
+        pgDraw.line(
+            window.screen,
+            BLACK,
+            [start_pos[0], start_pos[1] + (i * height)],
+            [end_pos[0], start_pos[1] + (i * height)],
+            3,
+        )
+    place_pieces(grid, window, box)
 
-          pygame.mixer.Channel(1).fadeout(500)
-      except FileNotFoundError:
-         print("")
+    return box
 
-lolll=False
-countu=0
-while lolll==True:
-   #global run
-   countu+=1 
-   #screen.fill([255,255,255])
-   run=True
-   alll=pygame.mouse.get_pos()
-   if alll[0]>=60 and alll[0]<=500 and alll[1]>=200 and alll[1]<=250:
-       for ev in pygame.event.get():
-         if ev.type ==pygame.MOUSEBUTTONDOWN:  
-           lolll=False
-   #print(alll,countu)
-   alll=0
-   pygame.display.flip()
-   textsurface = myfont.render("NEW GAME", False,[255,0,12])
-   screen.blit(textsurface,(60,200))
-   textsurface2 = myfont.render("EXIT", False,[255,0,12])
-   screen.blit(textsurface2,(60,300))
-   if countu==1000:
-      lolll=False
-   #time.sleep(2)
 
-screen.fill([255,255,255])  
-while run==True:
-      #screen.fill([255,255,255])
-      pygame.display.update()
-      a=game.get_pos()
-      chart()
-      turn_publisher()
-      for event in pygame.event.get():
-         if event.type==pygame.QUIT:
-            run=False
-            print("quit")
-         else:   
-            run=True
-      box_no=0
-      for lol in range(1,4):      
-         for lol1 in range(1,4): 
-            if a[0]>=180+(60*(lol-1)) and a[0]<=240+(60*(lol-1)) and a[1]>=140+(60*(lol1-1)) and a[1]<=200+(60*(lol1-1)):
-               box_no=((lol1*3)-3)+(lol)
-               place_x=180+(60*(lol-1))+20
-               place_y=140+(60*(lol1-1))+15
-               #print(turn)
-               presschecker()
+def horizontal(grid: list[list[str]]) -> tuple[State, str]:
+    _s: tuple[State, str] = (State.CON, "")
+    for row, items in enumerate(grid):
+        if grid[row][0] and all([x == grid[row][0] for x in items]):
+            return (State.WON, f"{grid[row][0]}")
+    return _s
 
-         
 
+def vertical(grid: list[list[str]]) -> tuple[State, str]:
+    _s: tuple[State, str] = (State.CON, "")
+    for col, item in enumerate(grid[0]):
+        if item and all([x[col] == item for x in grid]):
+            return (State.WON, f"{item}")
+    return _s
+
+
+def diagonal(grid: list[list[str]]) -> tuple[State, str]:
+    _s: tuple[State, str] = (State.CON, "")
+    if grid[0][0] and all([x[n] == grid[0][0] for n, x in enumerate(grid)]):
+        return (State.WON, f"{grid[0][0]}")
+    elif grid[0][-1] and all([x[-1 - n] == grid[0][-1] for n, x in enumerate(grid)]):
+        return (State.WON, f"{grid[0][-1]}")
+    return _s
+
+
+def display_state(window: Window, state: State, player: str, /) -> None:
+    offset = 30
+    state_msg = "WON" if state == State.WON else "TIE"
+    state_message = "[{}] {} the Other".format(player, state_msg)
+    retry_message = "(q to quit, click to playagain)"
+    state_text_surface = window.font.render(state_message, True, BLACK)
+    retry_text_surface = window.font.render(retry_message, True, BLACK)
+    (f_w, f_h) = state_text_surface.get_size()
+    (r_w, r_h) = state_text_surface.get_size()
+    d_h = f_h + r_h + offset
+    pgDraw.line(
+        window.screen,
+        (255, 0, 0),
+        (0, (window.height // 2) - (f_h * 2)),
+        (window.width, (window.height // 2) - (f_h * 2)),
+        d_h * 2,
+    )
+    window.screen.blit(state_text_surface, (window.width // 2 - (f_w // 2), (window.height // 2) - (f_h * 2)))
+    window.screen.blit(retry_text_surface, (window.width // 2 - (r_w // 2), ((window.height // 2) - (f_h))))
+    SPEAKER.play("win.wav", volume=50, fadeout=1000)
+
+
+def mtch_fixer(grid: list[list[str]]) -> tuple[State, str]:
+    winner: str = ""
+    # horizontal
+    state, winner = horizontal(grid)
+    if state == State.WON:
+        return state, winner
+    # veritcal
+    state, winner = vertical(grid)
+    if state == State.WON:
+        return state, winner
+    # diagonal
+    state, winner = diagonal(grid)
+    if state == State.WON:
+        return state, winner
+    return state, ""
+
+
+def plotter(grid: list[list[str]], player: str, window: Window, box: BoundingBox) -> tuple[State, str]:
+    index = box.index_of(*pgMouse.get_pos())
+
+    if grid[index[0]][index[1]]:
+        print("invalid location choose next location")
+        SPEAKER.play("invalid.mp3", volume=30, fadeout=1000)
+        return State.INV, player
+
+    grid[index[0]][index[1]] = player
+    SPEAKER.play("hacker.wav", volume=50, fadeout=1000)
+    place_pieces(grid=grid, window=window, box=box)
+    return mtch_fixer(grid)
+
+
+if __name__ == "__main__":
+    BLACK = (0, 0, 0)
+    WHITE = [255, 255, 255]
+    TURN = time.time_ns() % 2
+    RUN = True
+    PLAYER = ["O", "X"]
+    GRID = [
+        ["", "", ""],
+        ["", "", ""],
+        ["", "", ""],
+    ]
+
+    WINDOW = Window(width=400, height=400, caption="TicTacToe")
+    WINDOW.load_font()
+    FPS: int = 60
+    COMPLETED = False
+    board = BoundingBox((0, 0), (0, 0), 0, 0)
+    pygame.mixer_music.load("lol1.wav")
+    pygame.mixer_music.play()
+    while RUN == True:
+        if not COMPLETED:
+            WINDOW.screen.fill([255, 255, 255])
+            board = chart(GRID, WINDOW, len(GRID), len(GRID[0]))
+            WINDOW.header(f"{PLAYER[TURN % 2]}'s TURN....")
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                RUN = False
+                print("quit")
+            elif event.type == pygame.KEYDOWN and (event.dict.get("unicode", "").lower() == "q"):
+                RUN = False
+            elif event.type == pygame.MOUSEBUTTONDOWN and not COMPLETED:
+                player = PLAYER[TURN]
+                (state, player) = plotter(GRID, player, WINDOW, board)
+                if state != State.CON:
+                    COMPLETED = True
+                    GRID = [
+                        ["", "", ""],
+                        ["", "", ""],
+                        ["", "", ""],
+                    ]
+                    display_state(WINDOW, state, player)
+                elif state == State.CON:
+                    TURN ^= 1
+            elif event.type == pygame.MOUSEBUTTONDOWN and COMPLETED:
+                COMPLETED = False
+            elif event.type == pygame.WINDOWRESIZED:
+                WINDOW.update()
+        pygame.display.update()
+        time.sleep(1 / FPS)
